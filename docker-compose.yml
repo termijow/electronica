@@ -4,22 +4,22 @@ services:
   # Servicio de Base de Datos PostgreSQL
   db:
     image: postgres:15-alpine # Usa una imagen oficial de PostgreSQL (versión 15, Alpine Linux para menor tamaño)
-    container_name: queryforge_db
+    container_name: electronica_db
     restart: unless-stopped # Reinicia el contenedor a menos que se detenga manualmente
     environment:
-      POSTGRES_USER: queryforge_user # Nombre de usuario para la base de datos
-      POSTGRES_PASSWORD: queryforge_password # Contraseña para el usuario
-      POSTGRES_DB: queryforge_dev # Nombre de la base de datos a crear
+      POSTGRES_USER: electronica_user # Nombre de usuario para la base de datos
+      POSTGRES_PASSWORD: electronica_password # Contraseña para el usuario
+      POSTGRES_DB: electronica_dev # Nombre de la base de datos a crear
     ports:
       - "5432:5432" # Mapea el puerto 5432 del host al 5432 del contenedor (puerto estándar de Postgres)
     volumes:
       - pgdata:/var/lib/postgresql/data # Volumen nombrado para persistir los datos de PostgreSQL
     networks:
-      - queryforge_network # Conecta este servicio a la red definida abajo
+      - electronica_network # Conecta este servicio a la red definida abajo
 
   # Servicio Frontend (Next.js)
   frontend:
-    container_name: queryforge_frontend
+    container_name: electronica_frontend
     build:
       context: ./frontend # Directorio donde se encuentra el Dockerfile y el código del frontend
       dockerfile: Dockerfile # Nombre del Dockerfile (lo crearás en el siguiente paso)
@@ -36,11 +36,11 @@ services:
       # CHOKIDAR_USEPOLLING: "true" # A veces necesario para que el hot-reloading funcione en Docker en algunos sistemas
     restart: unless-stopped
     networks:
-      - queryforge_network
+      - electronica_network
 
   # Servicio Backend (NestJS)
   backend:
-    container_name: queryforge_backend
+    container_name: electronica_backend
     build:
       context: ./backend # Directorio donde se encuentra el Dockerfile y el código del backend
       dockerfile: Dockerfile # Nombre del Dockerfile (lo crearás en el siguiente paso)
@@ -52,12 +52,12 @@ services:
     depends_on:
       - db # El backend depende de que la base de datos esté lista
     environment:
-      DATABASE_URL: "postgresql://queryforge_user:queryforge_password@db:5432/queryforge_dev?schema=public" # URL de conexión a la BD
+      DATABASE_URL: "postgresql://electronica_user:electronica_password@db:5432/electronica_dev?schema=public" # URL de conexión a la BD
       PORT: 8000 # Puerto en el que escuchará NestJS dentro del contenedor
       # NODE_ENV: development # Especifica el entorno
     restart: unless-stopped
     networks:
-      - queryforge_network
+      - electronica_network
 
 # Definición de Volúmenes Nombrados
 volumes:
@@ -65,5 +65,5 @@ volumes:
 
 # Definición de Redes Personalizadas
 networks:
-  queryforge_network:
+  electronica_network:
     driver: bridge # Usa el driver de red 'bridge' por defecto
