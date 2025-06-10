@@ -1,69 +1,71 @@
-# version: '3.8' # Especifica la versión de la sintaxis de Docker Compose
+version: '3.8'
 
 services:
-  # Servicio de Base de Datos PostgreSQL
+  # Servicio de Base de Datos PostgreSQL (SIN CAMBIOS)
   db:
-    image: postgres:15-alpine # Usa una imagen oficial de PostgreSQL (versión 15, Alpine Linux para menor tamaño)
+    image: postgres:15-alpine
     container_name: electronica_db
-    restart: unless-stopped # Reinicia el contenedor a menos que se detenga manualmente
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: electronica_user # Nombre de usuario para la base de datos
-      POSTGRES_PASSWORD: electronica_password # Contraseña para el usuario
-      POSTGRES_DB: electronica_dev # Nombre de la base de datos a crear
+      POSTGRES_USER: electronica_user
+      POSTGRES_PASSWORD: electronica_password
+      POSTGRES_DB: electronica_dev
     ports:
-      - "5432:5432" # Mapea el puerto 5432 del host al 5432 del contenedor (puerto estándar de Postgres)
+      - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data # Volumen nombrado para persistir los datos de PostgreSQL
+      - pgdata:/var/lib/postgresql/data
     networks:
-      - electronica_network # Conecta este servicio a la red definida abajo
+      - electronica_network
 
-  # Servicio Frontend (Next.js)
+  # Servicio Frontend (Next.js) (SIN CAMBIOS SIGNIFICATIVOS, solo eliminé un comentario y revisé env var)
   frontend:
     container_name: electronica_frontend
     build:
-      context: ./frontend # Directorio donde se encuentra el Dockerfile y el código del frontend
-      dockerfile: Dockerfile # Nombre del Dockerfile (lo crearás en el siguiente paso)
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000" # Mapea el puerto 3000 del host al 3000 del contenedor (puerto estándar de Next.js dev)
+      - "3000:3000"
     volumes:
-      - ./frontend:/usr/src/app # Mapea el código fuente local al contenedor para hot-reloading
-      - /usr/src/app/node_modules # Evita que los node_modules locales sobrescriban los del contenedor
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules # Sigue siendo útil para Next.js en dev
     depends_on:
-      - backend # Opcional: puede depender del backend si necesita que esté listo primero, aunque para dev no suele ser estricto
+      - backend
     environment:
-      # Ejemplo de variable de entorno para el frontend
-      NEXT_PUBLIC_API_URL: http://backend:8000/api # URL para comunicarse con el backend (usa el nombre del servicio 'backend')
-      # CHOKIDAR_USEPOLLING: "true" # A veces necesario para que el hot-reloading funcione en Docker en algunos sistemas
+      NEXT_PUBLIC_API_URL: http://backend:8000/api # URL para comunicarse con el backend Django (ajusta el /api si tu estructura de URLS Django es diferente)
+      # CHOKIDAR_USEPOLLING: "true" # Descomentar si hot-reloading no funciona bien
     restart: unless-stopped
     networks:
       - electronica_network
 
-  # Servicio Backend (NestJS)
+  # Servicio Backend (Django) (MODIFICADO)
   backend:
     container_name: electronica_backend
     build:
       context: ./backend # Directorio donde se encuentra el Dockerfile y el código del backend
-      dockerfile: Dockerfile # Nombre del Dockerfile (lo crearás en el siguiente paso)
+      dockerfile: Dockerfile # Nombre del Dockerfile para Django
     ports:
-      - "8000:8000" # Mapea el puerto 8000 del host al 8000 del contenedor (puedes cambiarlo si NestJS usa otro)
+      - "8000:8000" # Mapea el puerto 8000 del host al 8000 del contenedor (puerto estándar de Django dev server)
     volumes:
       - ./backend:/usr/src/app # Mapea el código fuente local al contenedor para hot-reloading
-      - /usr/src/app/node_modules # Evita que los node_modules locales sobrescriban los del contenedor
     depends_on:
       - db # El backend depende de que la base de datos esté lista
     environment:
-      DATABASE_URL: "postgresql://electronica_user:electronica_password@db:5432/electronica_dev?schema=public" # URL de conexión a la BD
-      PORT: 8000 # Puerto en el que escuchará NestJS dentro del contenedor
-      # NODE_ENV: development # Especifica el entorno
+      DATABASE_URL: "postgresql://electronica_user:electronica_password@db:5432/electronica_dev"
+      DJANGO_SETTINGS_MODULE: "core.settings" # Reemplaza 'core' con el nombre de tu proyecto Django
+      SECRET_KEY: "tu_django_secret_key_aqui_cambiala_por_algo_seguro" # CAMBIA ESTO
+      DEBUG: "True" # Para desarrollo
+      PYTHONUNBUFFERED: "1" # Para que los logs de Python aparezcan inmediatamente en la consola de Docker
+      PORT: 8000 # Puerto en el que escuchará Django dentro del contenedor
+    # El comando para desarrollo se manejará en el Dockerfile de desarrollo,
+    # pero podríamos especificarlo aquí también si quisiéramos sobreescribir el CMD del Dockerfile.
+    # command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
     networks:
       - electronica_network
 
-# Definición de Volúmenes Nombrados
 volumes:
-  pgdata: # Este volumen persistirá los datos de PostgreSQL incluso si el contenedor se elimina y recrea
+  pgdata:
 
-# Definición de Redes Personalizadas
 networks:
   electronica_network:
-    driver: bridge # Usa el driver de red 'bridge' por defecto
+    driver: bridge
