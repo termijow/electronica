@@ -50,8 +50,8 @@ COPY --from=builder /usr/src/app/package.json ./package.json
 # Si usas yarn:
 # RUN yarn install --production
 
-# Exponer el puerto en el que Next.js se ejecuta (generalmente 3000)
-EXPOSE 3000
+# Exponer el puerto en el que Next.js se ejecuta (generalmente 3001)
+EXPOSE 3001
 
 # Comando para iniciar la aplicación Next.js en modo producción
 # El usuario 'node' es menos privilegiado, bueno para seguridad.

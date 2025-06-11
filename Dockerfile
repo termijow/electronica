@@ -48,8 +48,8 @@ COPY --from=builder /usr/src/app/dist ./dist
 # COPY --from=builder /usr/src/app/node_modules/.prisma ./node_modules/.prisma
 
 # El puerto en el que la aplicación NestJS escuchará (definido en main.ts o variables de entorno)
-# El `docker-compose.yml` ya define la variable de entorno PORT=8000
-EXPOSE 8000
+# El `docker-compose.yml` ya define la variable de entorno PORT=8001
+EXPOSE 8001
 
 # Comando para iniciar la aplicación NestJS
 # El usuario 'node' es menos privilegiado, bueno para seguridad.
@@ -59,3 +59,4 @@ CMD ["node", "dist/main.js"]
 # --- PARA DESARROLLO ---
 # Al igual que con el frontend, `docker-compose.yml` para desarrollo
 # sobreescribirá el CMD con algo como `npm run start:dev` y usará volúmenes.
+RUN npm install

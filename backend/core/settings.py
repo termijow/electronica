@@ -48,11 +48,11 @@ MIDDLEWARE = [
 ]
 
 # Si usas django-cors-headers:
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000", # Tu frontend
-#     "http://127.0.0.1:3000",
-# ]
-# CORS_ALLOW_CREDENTIALS = True # Si necesitas enviar cookies/auth headers
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3001", # Tu frontend
+    "http://127.0.0.1:3001",
+]
+CORS_ALLOW_CREDENTIALS = True # Si necesitas enviar cookies/auth headers
 
 ROOT_URLCONF = 'core.urls' # Reemplaza 'core' con el nombre de tu proyecto
 
@@ -78,11 +78,16 @@ WSGI_APPLICATION = 'core.wsgi.application' # Reemplaza 'core' con el nombre de t
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600 # Opcional: tiempo de vida de la conexión
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nombre_db',
+        'USER': 'usuario',
+        'PASSWORD': 'clave',
+        'HOST': 'db',
+        'PORT': '5433',
+    }
 }
+
 # Si DATABASE_URL no está seteada (ej. test local sin Docker), puedes tener un fallback:
 # if not DATABASES['default']:
 #     DATABASES['default'] = {
