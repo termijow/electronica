@@ -29,10 +29,10 @@ RUN pip install -r requirements.txt
 # pero es necesario para construir la imagen si no se usa un volumen.
 COPY . .
 
-# Exponer el puerto en el que Django se ejecuta (generalmente 8001)
+# Exponer el puerto en el que Django se ejecuta (generalmente 8000)
 # La variable PORT del docker-compose.yml puede ser usada por Django para determinar el puerto si se configura así
-EXPOSE 8001
+EXPOSE 8000
 
 # Comando para iniciar el servidor de desarrollo de Django
 # Escucha en todas las interfaces (0.0.0.0) para que sea accesible desde el host
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

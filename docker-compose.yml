@@ -9,31 +9,32 @@ services:
       POSTGRES_PASSWORD: electronica_password
       POSTGRES_DB: electronica_dev
     ports:
-      - "5433:5433"
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - electronica_network
+    # networks:
+    #   - electronica_network
 
   # Servicio Frontend (Next.js) (SIN CAMBIOS SIGNIFICATIVOS, solo eliminé un comentario y revisé env var)
+# frontend/docker-compose.yml (o parte del principal)
   frontend:
     container_name: electronica_frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "3000:3000"
     volumes:
       - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules # Sigue siendo útil para Next.js en dev
+      - /usr/src/app/node_modules # Correcto para desarrollo
     depends_on:
       - backend
     environment:
-      NEXT_PUBLIC_API_URL: http://backend:8001/api # URL para comunicarse con el backend Django (ajusta el /api si tu estructura de URLS Django es diferente)
-      # CHOKIDAR_USEPOLLING: "true" # Descomentar si hot-reloading no funciona bien
+      NEXT_PUBLIC_API_URL: http://backend:8000/api 
+      # CHOKIDAR_USEPOLLING: "true" # Solo si es necesario
+    # command: npm run start # CAMBIAR ESTO
+    command: npm run dev    # A ESTO para desarrollo
     restart: unless-stopped
-    networks:
-      - electronica_network
 
   # Servicio Backend (Django) (MODIFICADO)
   backend:
@@ -42,28 +43,28 @@ services:
       context: ./backend # Directorio donde se encuentra el Dockerfile y el código del backend
       dockerfile: Dockerfile # Nombre del Dockerfile para Django
     ports:
-      - "8001:8001" # Mapea el puerto 8001 del host al 8001 del contenedor (puerto estándar de Django dev server)
+      - "8000:8000" # Mapea el puerto 8000 del host al 8000 del contenedor (puerto estándar de Django dev server)
     volumes:
       - ./backend:/usr/src/app # Mapea el código fuente local al contenedor para hot-reloading
     depends_on:
       - db # El backend depende de que la base de datos esté lista
     environment:
-      DATABASE_URL: "postgresql://electronica_user:electronica_password@db:5433/electronica_dev"
+      DATABASE_URL: "postgresql://electronica_user:electronica_password@db:5432/electronica_dev"
       DJANGO_SETTINGS_MODULE: "core.settings" # Reemplaza 'core' con el nombre de tu proyecto Django
       SECRET_KEY: "tu_django_secret_key_aqui_cambiala_por_algo_seguro" # CAMBIA ESTO
       DEBUG: "True" # Para desarrollo
       PYTHONUNBUFFERED: "1" # Para que los logs de Python aparezcan inmediatamente en la consola de Docker
-      PORT: 8001 # Puerto en el que escuchará Django dentro del contenedor
+      PORT: 8000 # Puerto en el que escuchará Django dentro del contenedor
     # El comando para desarrollo se manejará en el Dockerfile de desarrollo,
     # pero podríamos especificarlo aquí también si quisiéramos sobreescribir el CMD del Dockerfile.
-    # command: python manage.py runserver 0.0.0.0:8001
+    # command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
-    networks:
-      - electronica_network
+    # networks:
+    #   - electronica_network
 
 volumes:
   pgdata:
 
-networks:
-  electronica_network:
-    driver: bridge
+# networks:
+#   electronica_network:
+#     driver: bridge

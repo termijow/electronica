@@ -25,3 +25,10 @@ docker compose exec frontend sh
 npm install
 ```
 
+### Información util para un futuro
+
+Para almacenar los videos/cursos etc, la mejor opcion es usar S3, pero puede ser caro, y la mejor opcion para tenerlo en un servidor propio es esta:
+```
+https://min.io/
+```
+Se podría crear un contenedor en docker para poder crear el servicio y correrlo en el mismo servidor, para ahorrar costos en un futuro.

@@ -1,14 +1,13 @@
-# backend/core/settings.py (o el nombre de tu proyecto)
+# backend/core/settings.py
 
 import os
 from pathlib import Path
-import dj_database_url # Añadir esta importación
-from dotenv import load_dotenv # Si usas python-dotenv
+import dj_database_url 
+from dotenv import load_dotenv 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Cargar variables de .env si existe (para desarrollo local fuera de Docker o para secrets no en docker-compose)
 # load_dotenv(BASE_DIR / '.env') # Descomenta si usas un archivo .env
 
 # Quick-start development settings - unsuitable for production
@@ -18,12 +17,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'una_clave_secreta_por_defecto_para_desarrollo_local_solo_si_no_esta_en_env')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = os.environ.get('DEBUG', 'true').lower() == 'true'
 
-ALLOWED_HOSTS = ['*'] # Para desarrollo. En producción, sé más restrictivo.
-                      # Si usas django-cors-headers, también configúralo.
+# CORS
+ALLOWED_HOSTS = ['*'] 
 
-# Application definition
+# Definición de la aplicación
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,13 +30,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'rest_framework',        # Si usas Django REST framework
-    # 'corsheaders',           # Si usas django-cors-headers
-    # Tus aplicaciones aquí
+    'rest_framework', 
+    'quicknotes',     
 ]
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware', # Debe ir antes de CommonMiddleware si se usa
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,14 +44,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Si usas django-cors-headers:
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3001", # Tu frontend
-    "http://127.0.0.1:3001",
+    "http://localhost:3000", # Tu frontend
+    "http://127.0.0.1:3000",
 ]
-CORS_ALLOW_CREDENTIALS = True # Si necesitas enviar cookies/auth headers
+CORS_ALLOW_CREDENTIALS = True
 
-ROOT_URLCONF = 'core.urls' # Reemplaza 'core' con el nombre de tu proyecto
+ROOT_URLCONF = 'core.urls' # 'core'
 
 TEMPLATES = [
     {
@@ -72,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application' # Reemplaza 'core' con el nombre de tu proyecto
+WSGI_APPLICATION = 'core.wsgi.application' # 'core' con el nombre de tu proyecto
 
 
 # Database
@@ -80,23 +76,14 @@ WSGI_APPLICATION = 'core.wsgi.application' # Reemplaza 'core' con el nombre de t
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nombre_db',
-        'USER': 'usuario',
-        'PASSWORD': 'clave',
+        'NAME': 'electronica_dev',
+        'USER': 'electronica_user',
+        'PASSWORD': 'electronica_password',
         'HOST': 'db',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
-# Si DATABASE_URL no está seteada (ej. test local sin Docker), puedes tener un fallback:
-# if not DATABASES['default']:
-#     DATABASES['default'] = {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-
-
-# Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -111,10 +98,6 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
 # STATIC_ROOT = BASE_DIR / 'staticfiles_collected' # Para collectstatic en producción
