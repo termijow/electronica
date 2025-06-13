@@ -29,8 +29,8 @@ services:
       - /usr/src/app/node_modules # Correcto para desarrollo
     depends_on:
       - backend
-    environment:
-      NEXT_PUBLIC_API_URL: http://backend:8000/api 
+    # environment:
+    #   NEXT_PUBLIC_API_URL: http://backend:8000/api 
       # CHOKIDAR_USEPOLLING: "true" # Solo si es necesario
     # command: npm run start # CAMBIAR ESTO
     command: npm run dev    # A ESTO para desarrollo

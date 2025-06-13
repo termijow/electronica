@@ -26,7 +26,7 @@ interface Note {
 // Lo ideal es que el Next.js server (en desarrollo) haga proxy o que tengas una URL pública.
 // Para este ejemplo, vamos a hardcodear la URL accesible desde el navegador,
 // pero en un escenario más robusto, configurarías esto mejor.
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 
 export default function QuickNotesPage() {
