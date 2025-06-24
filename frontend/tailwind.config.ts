@@ -5,8 +5,8 @@ const config: Config = {
 content: [
   './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
   './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-  './src/app/**/*.{js,ts,jsx,tsx,mdx}', // Cubre src/app/page.tsx
-  './src/app/globals.css',
+  './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+  './src/styles/globals.css', // <--- Asegúrate que esta sea la ruta correcta
 ],
   theme: {
     extend: {
