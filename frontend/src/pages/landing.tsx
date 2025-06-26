@@ -1,13 +1,22 @@
+import Proyectos from "@/components/Proyectos";
 import Header from "@/components/Header";
+import Carousel from "@/components/Carousel";
+import Servicios from "@/components/Servicios";
+import Nosotros from "@/components/Nosotros";
+import Footer from "@/components/Footer";
 
-export default function Home() {
+
+export default function Landing() {
   return (
     <>
       <Header />
-      {/* Resto del landing page */}
-      <main className="p-8 text-gray-700">
-        <h2 className="text-3xl font-bold">Bienvenido a nuestra página</h2>
-        <p className="mt-4">Aquí irá el contenido del landing...</p>
+
+      <main className="p-4">
+        <Carousel />
+        <Servicios />
+        <Nosotros />
+        <Proyectos/>
+        <Footer/>
       </main>
     </>
   );

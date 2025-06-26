@@ -20,7 +20,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   /* Aplicamos la fuente para encabezados */
-  @apply font-heading text-brand-red; /* `font-heading` usará 'Montserrat' */
+  @apply font-heading text-brand-white; /* `font-heading` usará 'Montserrat' */
   /* Hice los encabezados rojos para que se destaquen en la prueba */
 }
 
