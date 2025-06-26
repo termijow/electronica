@@ -14,13 +14,13 @@
 
 body {
   /* Aplicamos tus colores de marca y la fuente base del cuerpo */
-  @apply bg-brand-black text-brand-white font-sans antialiased overflow-x-hidden;
+  @apply bg-brand-white text-brand-black font-sans antialiased overflow-x-hidden;
   /* `font-sans` ahora usará 'Open Sans' según tu config */
 }
 
 h1, h2, h3, h4, h5, h6 {
   /* Aplicamos la fuente para encabezados */
-  @apply font-heading text-brand-red; /* `font-heading` usará 'Montserrat' */
+  @apply font-heading text-brand-white; /* `font-heading` usará 'Montserrat' */
   /* Hice los encabezados rojos para que se destaquen en la prueba */
 }
 
