@@ -4,7 +4,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import ModalRegistro from "@/components/ModalRegistro"; // Asegúrate que la ruta sea correcta
+import ModalRegistro from "@/components/ModalRegistro";
+import ModalLogin from "@/components/ModalLogin";
 
 const navItems = [
   { name: "Inicio", href: "/" },
@@ -16,11 +17,13 @@ const navItems = [
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <>
-      {/* MODAL REGISTRO */}
+      {/* MODALES */}
       <ModalRegistro isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ModalLogin isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
 
       <motion.header
         initial={{ y: -80, opacity: 0 }}
@@ -56,9 +59,12 @@ export default function Header() {
                 <span className="absolute left-0 bottom-[-4px] h-[2px] w-0 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
               </motion.div>
             ))}
-            <Link href="/login" className="text-white hover:text-green-300 font-medium">
+            <button
+              onClick={() => setIsLoginOpen(true)}
+              className="text-white hover:text-green-300 font-medium"
+            >
               Ingresar
-            </Link>
+            </button>
             <button
               onClick={() => setIsModalOpen(true)}
               className="bg-white text-blue-600 px-3 py-1 rounded-xl hover:bg-yellow-300 hover:text-blue-800 transition font-medium"
@@ -107,13 +113,15 @@ export default function Header() {
 
               <hr className="border-blue-300" />
 
-              <Link
-                href="/login"
-                onClick={() => setIsOpen(false)}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsLoginOpen(true);
+                }}
                 className="hover:text-green-300"
               >
                 Ingresar
-              </Link>
+              </button>
               <button
                 onClick={() => {
                   setIsOpen(false);
