@@ -1,7 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaFacebookF, FaInstagram, FaLinkedin } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+  FaDiscord,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -39,28 +48,36 @@ export default function Footer() {
         {/* Contacto / Redes */}
         <div>
           <h5 className="font-semibold mb-3">Contáctanos</h5>
-          <p className="text-sm mb-3">correo@empresa.com</p>
+          <ul className="text-sm space-y-2 mb-4">
+            <li className="flex items-center gap-2">
+              <FaEnvelope className="text-blue-200" />
+              <span>correo@empresa.com</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaPhoneAlt className="text-blue-200" />
+              <span>+57 301 123 4567</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <FaMapMarkerAlt className="text-blue-200" />
+              <span>Carrera 45 #123-45, Bogotá, Colombia</span>
+            </li>
+          </ul>
+
           <div className="flex justify-center md:justify-start gap-4 text-xl">
-            <motion.a
-              whileHover={{ scale: 1.2 }}
-              href="#"
-              className="transition"
-            >
+            <motion.a whileHover={{ scale: 1.2 }} href="#" className="transition" aria-label="Facebook">
               <FaFacebookF />
             </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.2 }}
-              href="#"
-              className="transition"
-            >
+            <motion.a whileHover={{ scale: 1.2 }} href="#" className="transition" aria-label="Instagram">
               <FaInstagram />
             </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.2 }}
-              href="#"
-              className="transition"
-            >
+            <motion.a whileHover={{ scale: 1.2 }} href="#" className="transition" aria-label="LinkedIn">
               <FaLinkedin />
+            </motion.a>
+            <motion.a whileHover={{ scale: 1.2 }} href="#" className="transition" aria-label="YouTube">
+              <FaYoutube />
+            </motion.a>
+            <motion.a whileHover={{ scale: 1.2 }} href="#" className="transition" aria-label="Discord">
+              <FaDiscord />
             </motion.a>
           </div>
         </div>

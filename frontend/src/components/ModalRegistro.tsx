@@ -1,7 +1,7 @@
-// src/components/ModalRegistro.tsx
 "use client";
 
 import { useState } from "react";
+import { useEscClose } from "@/hooks/useEscClose";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -17,7 +17,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 
 const departamentosColombia: Record<string, string[]> = {
   "Amazonas": ["Leticia", "Puerto Nariño"],
@@ -63,10 +62,59 @@ interface Props {
 }
 
 export default function ModalRegistro({ isOpen, onClose }: Props) {
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [edad, setEdad] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailConfirm, setEmailConfirm] = useState("");
   const [departamento, setDepartamento] = useState<string>("");
   const [ciudad, setCiudad] = useState<string>("");
+  const [mensaje, setMensaje] = useState<string | null>(null);
 
   const ciudades = departamento ? departamentosColombia[departamento] : [];
+
+  useEscClose(isOpen, onClose);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMensaje(null);
+
+    if (!nombre || !apellido || !edad || !departamento || !ciudad || !email || !emailConfirm) {
+      setMensaje("Por favor completa todos los campos.");
+      return;
+    }
+
+    if (email !== emailConfirm) {
+      setMensaje("Los correos no coinciden.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/registro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, apellido, edad, departamento, ciudad, email }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMensaje(data.error || "Error al registrar");
+      } else {
+        setMensaje("Usuario registrado exitosamente");
+        setNombre("");
+        setApellido("");
+        setEdad("");
+        setDepartamento("");
+        setCiudad("");
+        setEmail("");
+        setEmailConfirm("");
+        onClose();
+      }
+    } catch (error) {
+      setMensaje("Error del servidor. Intenta más tarde.");
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -106,29 +154,37 @@ export default function ModalRegistro({ isOpen, onClose }: Props) {
               Registro de Usuario
             </h2>
 
-            <form className="space-y-4">
+            {mensaje && <p className="text-center text-sm text-red-500 mb-2">{mensaje}</p>}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="Nombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
                   className="w-1/2 border border-gray-300 rounded-lg px-4 py-2"
                 />
                 <input
                   type="text"
                   placeholder="Apellido"
+                  value={apellido}
+                  onChange={(e) => setApellido(e.target.value)}
                   className="w-1/2 border border-gray-300 rounded-lg px-4 py-2"
                 />
               </div>
               <input
                 type="number"
                 placeholder="Edad"
+                value={edad}
+                onChange={(e) => setEdad(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2"
               />
 
               {/* Departamento Combobox */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="w-full border border-gray-300 rounded-lg px-4 py-2 text-left">
+                  <button type="button" className="w-full border border-gray-300 rounded-lg px-4 py-2 text-left">
                     {departamento || "Seleccione un departamento"}
                   </button>
                 </PopoverTrigger>
@@ -173,11 +229,15 @@ export default function ModalRegistro({ isOpen, onClose }: Props) {
               <input
                 type="email"
                 placeholder="Correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2"
               />
               <input
                 type="email"
                 placeholder="Confirmar correo electrónico"
+                value={emailConfirm}
+                onChange={(e) => setEmailConfirm(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2"
               />
               <button

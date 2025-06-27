@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useEscClose } from "@/hooks/useEscClose"; // ✅ Hook personalizado
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -14,8 +15,11 @@ export default function ModalLogin({ isOpen, onClose }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // ✅ Hook para cerrar con tecla Escape
+  useEscClose(isOpen, onClose);
+
   const handleGoogleLogin = () => {
-    // Aquí va la lógica de auth con Google si estás usando NextAuth, Firebase, etc.
+    // Aquí va la lógica real con Firebase, NextAuth, etc.
     alert("Iniciar sesión con Google aún no implementado.");
   };
 
@@ -74,10 +78,7 @@ export default function ModalLogin({ isOpen, onClose }: Props) {
               />
 
               <div className="text-right text-sm">
-                <a
-                  href="#"
-                  className="text-blue-600 hover:underline"
-                >
+                <a href="#" className="text-blue-600 hover:underline">
                   ¿Olvidaste tu contraseña?
                 </a>
               </div>
@@ -106,7 +107,9 @@ export default function ModalLogin({ isOpen, onClose }: Props) {
                 width={20}
                 height={20}
               />
-              <span className="text-sm font-medium text-gray-700">Continuar con Google</span>
+              <span className="text-sm font-medium text-gray-700">
+                Continuar con Google
+              </span>
             </button>
           </motion.div>
         </motion.div>
