@@ -1,10 +1,9 @@
-import Proyectos from "@/components/Proyectos";
-import Header from "@/components/Header";
-import Carousel from "@/components/Carousel";
-import Servicios from "@/components/Servicios";
-import Nosotros from "@/components/Nosotros";
-import Footer from "@/components/Footer";
-
+import Proyectos from "@/components/landing/Proyectos";
+import Header from "@/components/landing/Header";
+import Carousel from "@/components/landing/Carousel";
+import Servicios from "@/components/landing/Servicios";
+import Nosotros from "@/components/landing/Nosotros";
+import Footer from "@/components/landing/Footer";
 
 export default function Landing() {
   return (
@@ -15,8 +14,8 @@ export default function Landing() {
         <Carousel />
         <Servicios />
         <Nosotros />
-        <Proyectos/>
-        <Footer/>
+        <Proyectos />
+        <Footer />
       </main>
     </>
   );

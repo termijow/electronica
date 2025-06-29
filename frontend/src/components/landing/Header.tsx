@@ -4,8 +4,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import ModalRegistro from "@/components/ModalRegistro";
-import ModalLogin from "@/components/ModalLogin";
+import ModalRegistro from "@/components/landing/ModalRegistro";
+import ModalLogin from "@/components/landing/ModalLogin";
 
 const navItems = [
   { name: "Inicio", href: "/" },
@@ -14,14 +14,18 @@ const navItems = [
   { name: "Proyectos", href: "#proyectos" },
 ];
 
-export default function Header() {
+type HeaderProps = {
+  isAuthenticated?: boolean;
+  onLogout?: () => void;
+};
+
+export default function Header({ isAuthenticated = false, onLogout }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <>
-      {/* MODALES */}
       <ModalRegistro isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <ModalLogin isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
 
@@ -59,18 +63,30 @@ export default function Header() {
                 <span className="absolute left-0 bottom-[-4px] h-[2px] w-0 bg-yellow-400 group-hover:w-full transition-all duration-300"></span>
               </motion.div>
             ))}
-            <button
-              onClick={() => setIsLoginOpen(true)}
-              className="text-white hover:text-green-300 font-medium"
-            >
-              Ingresar
-            </button>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-white text-blue-600 px-3 py-1 rounded-xl hover:bg-yellow-300 hover:text-blue-800 transition font-medium"
-            >
-              Registrarse
-            </button>
+
+            {isAuthenticated ? (
+              <button
+                onClick={onLogout}
+                className="text-white hover:text-red-400 font-medium"
+              >
+                Salir
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => setIsLoginOpen(true)}
+                  className="text-white hover:text-green-300 font-medium"
+                >
+                  Ingresar
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="bg-white text-blue-600 px-3 py-1 rounded-xl hover:bg-yellow-300 hover:text-blue-800 transition font-medium"
+                >
+                  Registrarse
+                </button>
+              </>
+            )}
           </nav>
 
           {/* BOTÓN MENÚ MÓVIL */}
@@ -113,24 +129,38 @@ export default function Header() {
 
               <hr className="border-blue-300" />
 
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  setIsLoginOpen(true);
-                }}
-                className="hover:text-green-300"
-              >
-                Ingresar
-              </button>
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  setIsModalOpen(true);
-                }}
-                className="bg-white text-blue-600 px-4 py-2 rounded-xl w-fit hover:bg-yellow-300 hover:text-blue-800 transition"
-              >
-                Registrarse
-              </button>
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    onLogout?.();
+                  }}
+                  className="text-left text-red-400 hover:text-white"
+                >
+                  Salir
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsLoginOpen(true);
+                    }}
+                    className="hover:text-green-300"
+                  >
+                    Ingresar
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsModalOpen(true);
+                    }}
+                    className="bg-white text-blue-600 px-4 py-2 rounded-xl w-fit hover:bg-yellow-300 hover:text-blue-800 transition"
+                  >
+                    Registrarse
+                  </button>
+                </>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
